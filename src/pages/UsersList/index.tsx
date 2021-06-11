@@ -9,7 +9,9 @@ import {
   Pagination,
   ShadowBox,
 } from './styles';
-import CustomSnackBar, { CustomSnackBarProps } from '../../CustomSnackBar';
+import CustomSnackBar, {
+  CustomSnackBarProps,
+} from '../../components/CustomSnackBar';
 import { useHistory, useLocation } from 'react-router-dom';
 import UserServices from '../../service/UserServices';
 import User from '../../model/User';
@@ -17,6 +19,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
+import Loading from '../../components/Loading';
 type UsersQueryParams = {
   page?: number;
 };
@@ -29,6 +32,7 @@ const UsersList: React.FC<UsersQueryParams> = ({ page }) => {
   const [pageError, setPageError] = React.useState(true);
   const [currentPage, setCurrentPage] = React.useState<number>(1);
   const [totalPages, setTotalPages] = React.useState(1);
+  const [loading, setLoading] = React.useState(false);
 
   const getUsersList = () => {
     const query = new URLSearchParams(search);
@@ -38,14 +42,27 @@ const UsersList: React.FC<UsersQueryParams> = ({ page }) => {
       setCurrentPage(parseInt(page));
       reqPageNumber = parseInt(page);
     }
-    service.user.getUserListFromPage(reqPageNumber).then(response => {
-      if (response.status === 200) {
-        setUsersList(response.data.data);
-        setTotalPages(response.data.total_pages);
-      } else {
-        setPageError(true);
-      }
-    });
+    setLoading(true);
+    service.user
+      .getUserListFromPage(reqPageNumber)
+      .then(response => {
+        if (response.status === 200) {
+          setUsersList(response.data.data);
+          setTotalPages(response.data.total_pages);
+        } else {
+          setPageError(true);
+        }
+      })
+      .catch(() =>
+        setSnackProps({
+          ...snackProps,
+          message: 'An unexpected error occurred, please try again!',
+          open: true,
+        }),
+      )
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   React.useEffect(getUsersList, []);
@@ -53,9 +70,9 @@ const UsersList: React.FC<UsersQueryParams> = ({ page }) => {
 
   const handleCloseSnack = () => setSnackProps({ ...snackProps, open: false });
   const [snackProps, setSnackProps] = React.useState<CustomSnackBarProps>({
-    autoHideDuration: 6000,
+    autoHideDuration: 3000,
     handleClose: handleCloseSnack,
-    message: '',
+    message: 'An unexpected error occurred, please try again!',
     open: false,
     status: 'error',
   });
@@ -73,21 +90,37 @@ const UsersList: React.FC<UsersQueryParams> = ({ page }) => {
     );
 
     if (response) {
-      service.user.deleteUser(usersList[index].id).then(response => {
-        console.log({ status: response.status });
-        if (response.status === 204) {
-          const newArr = usersList;
-          console.log('aa');
+      setLoading(true);
+      service.user
+        .deleteUser(usersList[index].id)
+        .then(response => {
+          console.log({ status: response.status });
+          if (response.status === 204) {
+            const newArr = usersList;
+            console.log('aa');
 
-          setUsersList([...newArr.slice(0, index), ...newArr.slice(index + 1)]);
+            setUsersList([
+              ...newArr.slice(0, index),
+              ...newArr.slice(index + 1),
+            ]);
+            setSnackProps({
+              message: `${name} deleted successfully`,
+              open: true,
+              status: 'success',
+              handleClose: handleCloseSnack,
+            });
+          }
+        })
+        .catch(() =>
           setSnackProps({
-            message: `${name} deleted successfully`,
+            ...snackProps,
+            message: 'An unexpected error occurred, please try again!',
             open: true,
-            status: 'success',
-            handleClose: handleCloseSnack,
-          });
-        }
-      });
+          }),
+        )
+        .finally(() => {
+          setLoading(false);
+        });
     }
   };
 
@@ -158,6 +191,7 @@ const UsersList: React.FC<UsersQueryParams> = ({ page }) => {
         </h1>
       )}
 
+      <Loading loading={loading} />
       <CustomSnackBar {...snackProps} />
     </Container>
   );

@@ -7,7 +7,9 @@ import {
   Name,
   UserContainer,
 } from './styles';
-import CustomSnackBar, { CustomSnackBarProps } from '../../CustomSnackBar';
+import CustomSnackBar, {
+  CustomSnackBarProps,
+} from '../../components/CustomSnackBar';
 import { useHistory, useParams } from 'react-router-dom';
 import UserServices from '../../service/UserServices';
 
@@ -16,6 +18,7 @@ import Button from '@material-ui/core/Button';
 
 import { RouteComponentProps, withRouter } from 'react-router';
 import User from '../../model/User';
+import Loading from '../../components/Loading';
 
 const UserEdit = () => {
   const history = useHistory();
@@ -25,10 +28,67 @@ const UserEdit = () => {
     {} as User,
   );
 
+  const [loading, setLoading] = React.useState(false);
   const [job, setJob] = React.useState('');
+
+  const handleCloseSnack = () => setSnackProps({ ...snackProps, open: false });
+  const [snackProps, setSnackProps] = React.useState<CustomSnackBarProps>({
+    autoHideDuration: 3000,
+    handleClose: handleCloseSnack,
+    message: 'An unexpected error occurred, please try again!',
+    open: false,
+    status: 'error',
+  });
+
+  const handleSubmit = () => {
+    if (!job) {
+      setSnackProps({
+        handleClose: handleCloseSnack,
+        message: 'You must inform the role!',
+        open: true,
+        status: 'info',
+      });
+    } else {
+      if (id && !isNaN(parseInt(id))) {
+        setLoading(true);
+        service.user
+          .editUser(parseInt(id), {
+            name: `${userInitialInfo.first_name} ${userInitialInfo.last_name}`,
+            job,
+          })
+          .then(response => {
+            if (response.status === 200) {
+              setSnackProps({
+                handleClose: handleCloseSnack,
+                message: 'User information updated successfully!',
+                open: true,
+                status: 'success',
+              });
+            } else {
+              setSnackProps({
+                ...snackProps,
+                message: 'An unexpected error occurred, please try again!',
+                open: true,
+              });
+            }
+          })
+          .catch(() =>
+            setSnackProps({
+              ...snackProps,
+              message: 'An unexpected error occurred, please try again!',
+              open: true,
+            }),
+          )
+          .finally(() => {
+            setLoading(false);
+          });
+      }
+    }
+  };
 
   React.useEffect(() => {
     if (id && !isNaN(parseInt(id))) {
+      setLoading(true);
       service.user
         .getUserInfo(parseInt(id))
         .then(response => {
@@ -46,58 +106,12 @@ const UserEdit = () => {
             ...snackProps,
             open: true,
           }),
-        );
+        )
+        .finally(() => {
+          setLoading(false);
+        });
     }
   }, []);
-
-  const handleSubmit = () => {
-    if (!job) {
-      setSnackProps({
-        handleClose: handleCloseSnack,
-        message: 'You must inform the role!',
-        open: true,
-        status: 'info',
-      });
-    } else {
-      if (id && !isNaN(parseInt(id))) {
-        service.user
-          .editUser(parseInt(id), {
-            name: `${userInitialInfo.first_name} ${userInitialInfo.last_name}`,
-            job,
-          })
-          .then(response => {
-            if (response.status === 200) {
-              setSnackProps({
-                handleClose: handleCloseSnack,
-                message: 'User information updated successfully!',
-                open: true,
-                status: 'success',
-              });
-            } else {
-              setSnackProps({
-                ...snackProps,
-                open: true,
-              });
-            }
-          })
-          .catch(() =>
-            setSnackProps({
-              ...snackProps,
-              open: true,
-            }),
-          );
-      }
-    }
-  };
-
-  const handleCloseSnack = () => setSnackProps({ ...snackProps, open: false });
-  const [snackProps, setSnackProps] = React.useState<CustomSnackBarProps>({
-    autoHideDuration: 3000,
-    handleClose: handleCloseSnack,
-    message: 'An unexpected error occurred, please try again!',
-    open: false,
-    status: 'error',
-  });
 
   return (
     <Container>
@@ -154,6 +168,7 @@ const UserEdit = () => {
         </UserContainer>
       )}
 
+      <Loading loading={loading} />
       <CustomSnackBar {...snackProps} />
     </Container>
   );

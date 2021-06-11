@@ -7,8 +7,11 @@ import fullLogo from '../../assets/Images/full-logo.png';
 import { Container, FormStyle, LoginContainer } from './styles';
 import AuthenticationServices from '../../service/AuthenticationServices';
 import { setBearerToken } from '../../service/api';
-import CustomSnackBar, { CustomSnackBarProps } from '../../CustomSnackBar';
+import CustomSnackBar, {
+  CustomSnackBarProps,
+} from '../../components/CustomSnackBar';
 import { useHistory } from 'react-router-dom';
+import Loading from '../../components/Loading';
 
 export interface SignInPasswordForm {
   password: string;
@@ -37,6 +40,8 @@ const Login: React.FC = () => {
     open: false,
     status: 'error',
   });
+
+  const [loading, setLoading] = React.useState(false);
 
   const service = { authentication: new AuthenticationServices() };
 
@@ -71,6 +76,7 @@ const Login: React.FC = () => {
 
   const handleSubmit = () => {
     if (isFormValid()) {
+      setLoading(true);
       service.authentication
         .login({ ...formValues })
         .then(response => {
@@ -96,6 +102,9 @@ const Login: React.FC = () => {
             message: 'An unexpected error occurred, please try again!',
             status: 'error',
           });
+        })
+        .finally(() => {
+          setLoading(false);
         });
     } else {
       setSnackProps({
@@ -149,6 +158,7 @@ const Login: React.FC = () => {
           </Button>
         </FormStyle>
       </LoginContainer>
+      <Loading loading={loading} />
       <CustomSnackBar {...snackProps} />
     </Container>
   );
