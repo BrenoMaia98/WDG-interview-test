@@ -13,7 +13,6 @@ In order to test all the project features,you need to access the fake API docume
 There are still points to be improved, especially those related to usability:
 
 - Create a modal to confirm user deletion.
-- Loading full page overlay.
 - Create API request interceptors to validate response status.
 - Completely refactor, CustomSnackComponent.
 - If user don't have token, redirect to login.
