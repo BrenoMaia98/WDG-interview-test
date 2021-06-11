@@ -40,7 +40,6 @@ const Users: React.FC<UsersQueryParams> = ({ page }) => {
     }
     service.user.getUserListFromPage(reqPageNumber).then(response => {
       if (response.status === 200) {
-        console.log({ response });
         setUsersList(response.data.data);
         setTotalPages(response.data.total_pages);
       } else {
@@ -61,15 +60,43 @@ const Users: React.FC<UsersQueryParams> = ({ page }) => {
     status: 'error',
   });
 
+  const goToPage = (param: 'prev' | 'next') => {
+    const newPage = param === 'prev' ? currentPage - 1 : currentPage + 1;
+    history.push(`users?page=${newPage}`);
+  };
+  const handleEditUser = (index: number) => {};
+  const handleDeleteUser = (index: number, name: string) => {
+    const response = window.confirm(
+      `Are you sure you want to delete ${name} from the list?`,
+    );
+
+    if (response) {
+      service.user.deleteUser(usersList[index].id).then(response => {
+        console.log({ status: response.status });
+        if (response.status === 204) {
+          const newArr = usersList;
+          console.log('aa');
+
+          setUsersList([...newArr.slice(0, index), ...newArr.slice(index + 1)]);
+          setSnackProps({
+            message: `${name} deleted successfully`,
+            open: true,
+            status: 'success',
+            handleClose: handleCloseSnack,
+          });
+        }
+      });
+    }
+  };
+
   return (
     <Container>
       {pageError ? (
         <>
-          <h1>This Dashboard project status: Work In Progress ❤ </h1>
+          <h1> Work In Progress ❤ </h1>
           <UsersContainer>
-            {usersList.map(userInfo => {
+            {usersList.map((userInfo, index) => {
               const { avatar, email, first_name, id, last_name } = userInfo;
-              console.log({ Item: userInfo });
               return (
                 <UserView key={`${first_name} ${last_name}`}>
                   <img src={avatar} alt={first_name + ' avatar pic.'} />
@@ -83,11 +110,15 @@ const Users: React.FC<UsersQueryParams> = ({ page }) => {
                     </UserInformationRow>
                   </ShadowBox>
                   <UserActions>
-                    <ShadowBox>
+                    <ShadowBox
+                      onClick={() =>
+                        handleDeleteUser(index, ` ${first_name} ${last_name}`)
+                      }
+                    >
                       <DeleteIcon />
                       <span>Delete</span>
                     </ShadowBox>
-                    <ShadowBox>
+                    <ShadowBox onClick={() => handleEditUser(index)}>
                       <EditIcon />
                       <span>Edit</span>
                     </ShadowBox>
@@ -101,7 +132,7 @@ const Users: React.FC<UsersQueryParams> = ({ page }) => {
               <NavigateBeforeIcon
                 fontSize={'large'}
                 onClick={() => {
-                  history.push(`users?page=${currentPage - 1}`);
+                  goToPage('prev');
                 }}
               />
             )}
@@ -112,7 +143,7 @@ const Users: React.FC<UsersQueryParams> = ({ page }) => {
               <NavigateNextIcon
                 fontSize={'large'}
                 onClick={() => {
-                  history.push(`users?page=${currentPage + 1}`);
+                  goToPage('next');
                 }}
               />
             )}

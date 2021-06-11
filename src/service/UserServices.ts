@@ -40,7 +40,6 @@ class UserServices {
   };
 
   getUserListFromPage = (page: number) => {
-    console.log('GETLIST');
     return api.get<{}, AxiosResponse<PagedResponse<User>>>(
       `users?page=${page}${delay && '&delay=2'}`,
     );
