@@ -19,29 +19,30 @@ type EditUserRequest = {
 interface EditUserResponse extends EditUserRequest {
   updatedAt: string;
 }
-
+const delay = false;
 class UserServices {
   deleteUser = (userID: number) => {
     return api.delete<{}, AxiosResponse<UserObjResponse>>(
-      `user/${userID}?delay=2`,
+      `users/${userID}${delay && '?delay=2'}`,
     );
   };
 
   editUser = (userID: number) => {
     return api.put<EditUserRequest, AxiosResponse<EditUserResponse>>(
-      `user/${userID}?delay=2`,
+      `users/${userID}${delay && '?delay=2'}`,
     );
   };
 
   getUserInfo = (userID: number) => {
     return api.get<{}, AxiosResponse<UserObjResponse>>(
-      `user/${userID}?delay=2`,
+      `users/${userID}${delay && '?delay=2'}`,
     );
   };
 
   getUserListFromPage = (page: number) => {
-    return api.delete<{}, AxiosResponse<PagedResponse<User>>>(
-      `user?page=${page}&delay=2`,
+    console.log('GETLIST');
+    return api.get<{}, AxiosResponse<PagedResponse<User>>>(
+      `users?page=${page}${delay && '&delay=2'}`,
     );
   };
 }

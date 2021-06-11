@@ -8,6 +8,7 @@ const api = axios.create({
 });
 
 export const setBearerToken = (storageToken: string): void => {
+  console.log('Token set:', storageToken);
   api.defaults.headers.Authorization = `Bearer ${storageToken}`;
 };
 
