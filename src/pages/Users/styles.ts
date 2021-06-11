@@ -1,9 +1,14 @@
 import styled from 'styled-components';
 import {
+  BLACK,
+  ERROR,
   GRAY,
+  INFO,
+  LIGHTER_GRAY,
   PRIMARY,
   PRIMARY_DARK,
   PRIMARY_LIGHT,
+  WHITE,
 } from '../../styles/colorPalette';
 export const Container = styled.div`
   background-image: ${` linear-gradient(
@@ -41,26 +46,74 @@ export const UsersContainer = styled.div`
 export const UserView = styled.div`
   display: flex;
   flex-direction: column;
-  /* width: max(20vw, 3rem) !important; */
-  /* max-height: 30vh; */
+  height: max(35vh, 3rem) !important;
   img {
-    /* height: max(10vh, 15vw, 3rem) !important; */
-    /* width: max(20vh, 20vw, 3rem) !important; */
-    flex: 1;
+    min-height: 20vh;
+    width: 20vh;
+    margin: auto;
+    /* flex: 1; */
     border: 1px solid ${GRAY};
     border-top-left-radius: 1rem;
     border-top-right-radius: 1rem;
+    object-fit: fill;
+    border-radius: 500px;
+    background-color: ${WHITE};
+    box-shadow: 5px 5px 15px 5px ${BLACK};
   }
   margin: 1rem 2rem;
 `;
 
-export const Information = styled.div`
+export const UserInformationRow = styled.div`
   flex-wrap: wrap;
   border: 1px solid ${GRAY};
 
   display: flex;
-  background-color: #fff;
+  background-color: ${WHITE};
   h3 {
     padding: 0.25rem 0.5rem;
+  }
+`;
+export const ShadowBox = styled.div`
+  box-shadow: 5px 5px 15px 5px ${BLACK};
+`;
+
+export const UserActions = styled(UserInformationRow)`
+  display: flex;
+  background-color: rgba(0, 0, 0, 0);
+  border-width: 0px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.25rem 0.5rem;
+  div {
+    background-color: ${LIGHTER_GRAY};
+
+    display: flex;
+    justify-content: space-between;
+    padding: 0.25rem 0.5rem;
+    cursor: pointer;
+    border: 1px solid ${GRAY};
+  }
+
+  div:nth-child(1) {
+    color: ${ERROR};
+  }
+
+  div:nth-child(2) {
+    color: ${INFO};
+  }
+`;
+
+export const Pagination = styled.div`
+  bottom: 1rem;
+  left: 48%;
+  position: absolute;
+
+  display: flex;
+  align-items: center;
+
+  background-color: ${PRIMARY_DARK};
+
+  svg {
+    cursor: pointer;
   }
 `;
