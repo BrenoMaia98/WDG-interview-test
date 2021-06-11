@@ -16,6 +16,7 @@ const CustomSnackBar: React.FC<CustomSnackBarProps> = ({
   autoHideDuration = 6000,
   handleClose,
   message,
+  status,
 }) => {
   return (
     <>
@@ -24,7 +25,7 @@ const CustomSnackBar: React.FC<CustomSnackBarProps> = ({
         autoHideDuration={autoHideDuration}
         onClose={handleClose}
       >
-        <MuiAlert onClose={handleClose} severity="success">
+        <MuiAlert onClose={handleClose} severity={status}>
           {message}
         </MuiAlert>
       </Snackbar>
