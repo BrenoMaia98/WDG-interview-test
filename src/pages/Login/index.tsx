@@ -8,6 +8,7 @@ import { Container, FormStyle, LoginContainer } from './styles';
 import AuthenticationServices from '../../service/AuthenticationServices';
 import { setBearerToken } from '../../service/api';
 import CustomSnackBar, { CustomSnackBarProps } from '../../CustomSnackBar';
+import { useHistory } from 'react-router-dom';
 
 export interface SignInPasswordForm {
   password: string;
@@ -15,6 +16,8 @@ export interface SignInPasswordForm {
 }
 
 const Login: React.FC = () => {
+  const history = useHistory();
+
   const [formValues, setFormValues] = React.useState<SignInPasswordForm>({
     password: 'cityslicka',
     email: 'eve.holt@reqres.in',
@@ -25,9 +28,11 @@ const Login: React.FC = () => {
     password: '',
     email: '',
   });
+
+  const handleCloseSnack = () => setSnackProps({ ...snackProps, open: false });
   const [snackProps, setSnackProps] = React.useState<CustomSnackBarProps>({
     autoHideDuration: 6000,
-    handleClose: () => setSnackProps({ ...snackProps, open: false }),
+    handleClose: handleCloseSnack,
     message: '',
     open: false,
     status: 'error',
@@ -72,10 +77,31 @@ const Login: React.FC = () => {
           const { token, error } = response.data;
           if (response.status === 200 && token) {
             setBearerToken(token);
+            history.push('/users');
           } else {
+            setSnackProps({
+              ...snackProps,
+              open: true,
+              message: error as string | 'Houve um erro inesperado!',
+              status: 'error',
+            });
           }
         })
-        .catch(err => {});
+        .catch(err => {
+          setSnackProps({
+            ...snackProps,
+            open: true,
+            message: 'Houve um erro inesperado!',
+            status: 'error',
+          });
+        });
+    } else {
+      setSnackProps({
+        ...snackProps,
+        open: true,
+        message: 'Login e/ou senha possuem erros!',
+        status: 'error',
+      });
     }
   };
 

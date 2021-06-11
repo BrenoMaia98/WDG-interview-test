@@ -6,10 +6,13 @@ type loginResponse = { token?: string; error?: string };
 
 class AuthenticationServices {
   login = ({ email, password }: loginParams) => {
-    return api.post<loginParams, AxiosResponse<loginResponse>>('login', {
-      email,
-      password,
-    });
+    return api.post<loginParams, AxiosResponse<loginResponse>>(
+      'login?delay=2',
+      {
+        email,
+        password,
+      },
+    );
   };
 }
 
