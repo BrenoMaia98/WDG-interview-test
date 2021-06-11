@@ -1,11 +1,19 @@
 import React from 'react';
+import api from '../../service/api';
 import { Container } from './styles';
 
 const PageNotFound: React.FC = () => {
   return (
     <Container>
-      <h1>Page Not Found</h1>
-      <h4>I'm sorry :(</h4>
+      <div>
+        <h1>404</h1>
+      </div>
+      <div>
+        <h1>Page Not Found</h1>
+        <span>
+          <a href="/">Return to HomePage</a>
+        </span>
+      </div>
     </Container>
   );
 };
