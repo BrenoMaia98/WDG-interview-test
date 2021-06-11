@@ -8,7 +8,7 @@ const delay = true;
 class AuthenticationServices {
   login = ({ email, password }: loginParams) => {
     return api.post<loginParams, AxiosResponse<loginResponse>>(
-      `login${delay && '?delay=2'}`,
+      `login${(delay && '?delay=2') || ''}`,
       {
         email,
         password,

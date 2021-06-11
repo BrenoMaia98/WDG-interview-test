@@ -2,7 +2,8 @@ import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Login from '../pages/Login';
 import PageNotFound from '../pages/PageNotFound';
-import Users from '../pages/Users';
+import UserEdit from '../pages/UserEdit';
+import UsersList from '../pages/UsersList';
 
 const IndexRoutes = (): JSX.Element => {
   return (
@@ -13,8 +14,11 @@ const IndexRoutes = (): JSX.Element => {
         <Route
           exact
           path="/users"
-          component={(props: { page?: number }) => <Users {...props} />}
+          component={(props: { page?: number }) => <UsersList {...props} />}
         />
+        <Route exact path="/users/:id">
+          <UserEdit />
+        </Route>
         <Route component={PageNotFound} />
       </Switch>
     </Router>

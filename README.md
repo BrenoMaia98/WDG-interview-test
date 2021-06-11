@@ -10,11 +10,17 @@ This project is consumes a fake API, simulating different responses, such as:
 
 In order to test all the project features,you need to access the fake API documentation in order to retrieve a valid login.
 
-There are still points to be improved, especially those related to usability
+There are still points to be improved, especially those related to usability:
+
+- Create a modal to confirm user deletion.
+- Loading full page overlay.
+- Create API request interceptors to validate response status.
+- Completely refactor, CustomSnackComponent.
+- If user don't have token, redirect to login.
 
 ## Instructions
 
-Make sure you have all the React.js tools to run this project (Once you cloned the repo, or downloaded a copy, open a terminal on the project root, and then just type:
+Make sure you have all the React.js tools to run this project. Once you cloned the repo, or downloaded a copy, open a terminal on the project root, and then just type:
 
 ### `yarn start` or `npm start`
 

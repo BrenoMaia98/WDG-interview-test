@@ -110,7 +110,7 @@ const Login: React.FC = () => {
   return (
     <Container>
       <img src={imageBg} alt="" />
-      <LoginContainer className="col-6 md-8 sm-12">
+      <LoginContainer>
         <FormStyle>
           <img src={fullLogo} alt="WDG Automation" className="logo" />
           <TextField

@@ -22,7 +22,6 @@ export const Container = styled.div`
 `;
 
 export const LoginContainer = styled.div`
-  /* col-6 md-8 sm-12 */
   filter: blur(0px);
   background-color: #fff;
   padding: 2rem;
