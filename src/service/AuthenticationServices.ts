@@ -1,12 +1,14 @@
+import { AxiosResponse } from 'axios';
 import api from './api';
 
-type loginParams = { emailOrCPF: string; password: string };
+type loginParams = { email: string; password: string };
+type loginResponse = { token?: string; error?: string };
 
 class AuthenticationServices {
-  login = ({ emailOrCPF, password }: loginParams) => {
-    return api.post('login', {
-      email: emailOrCPF,
-      password: password,
+  login = ({ email, password }: loginParams) => {
+    return api.post<loginParams, AxiosResponse<loginResponse>>('login', {
+      email,
+      password,
     });
   };
 }
