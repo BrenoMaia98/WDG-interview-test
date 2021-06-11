@@ -52,16 +52,16 @@ const Login: React.FC = () => {
     let hasError = false;
 
     if (!emailRegex.test(formValues.email)) {
-      newErrors.email = 'Formato do e-mail inválido!';
+      newErrors.email = 'Invalid e-mail format!';
       hasError = true;
     }
 
     if (!formValues.email) {
-      newErrors.email = 'Campo obrigatório!';
+      newErrors.email = 'Required field!';
       hasError = true;
     }
     if (!formValues.password) {
-      newErrors.email = 'Campo obrigatório!';
+      newErrors.email = 'Required field!';
       hasError = true;
     }
     setFormErrors(newErrors);
@@ -82,7 +82,9 @@ const Login: React.FC = () => {
             setSnackProps({
               ...snackProps,
               open: true,
-              message: error as string | 'Houve um erro inesperado!',
+              message: error as
+                | string
+                | 'An unexpected error occurred, please try again!',
               status: 'error',
             });
           }
@@ -91,7 +93,7 @@ const Login: React.FC = () => {
           setSnackProps({
             ...snackProps,
             open: true,
-            message: 'Houve um erro inesperado!',
+            message: 'An unexpected error occurred, please try again!',
             status: 'error',
           });
         });
@@ -99,7 +101,7 @@ const Login: React.FC = () => {
       setSnackProps({
         ...snackProps,
         open: true,
-        message: 'Login e/ou senha possuem erros!',
+        message: 'User and/or password are wrong!',
         status: 'error',
       });
     }
