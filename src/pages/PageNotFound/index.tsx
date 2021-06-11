@@ -1,5 +1,4 @@
 import React from 'react';
-import api from '../../service/api';
 import { Container } from './styles';
 
 const PageNotFound: React.FC = () => {

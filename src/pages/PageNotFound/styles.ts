@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { BLACK, GRAY, LIGHTER_GRAY, PRIMARY } from '../../styles/colorPalette';
+import { BLACK, LIGHTER_GRAY, PRIMARY } from '../../styles/colorPalette';
 export const Container = styled.div`
   background-color: ${LIGHTER_GRAY};
   color: ${BLACK};
